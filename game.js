@@ -1,6 +1,6 @@
 const MAX_ROUNDS = 15;
 
-let mode, phase = "fill"; // Phases: fill, switching, play, end
+let mode, phase = "fill";
 let fillPlayer = 1;
 let currentPlayer = 1;
 let round = 0;
@@ -15,7 +15,6 @@ let roundP2 = null;
 let nextPlayer = 1;
 let nextPhase = "fill";
 
-/* PLAYER */
 class Player {
   constructor(isAI = false) {
     this.grid = Array(16).fill(null);
@@ -28,17 +27,6 @@ class Player {
   }
 }
 
-/* RULES TOGGLE */
-function toggleRules() {
-  const modal = document.getElementById("rulesModal");
-  if (modal.style.display === "none" || modal.style.display === "") {
-    modal.style.display = "block";
-  } else {
-    modal.style.display = "none";
-  }
-}
-
-/* START */
 function startGame(m) {
   mode = m;
   phase = "fill";
@@ -57,7 +45,7 @@ function startGame(m) {
   document.querySelector("#roundTable tbody").innerHTML = "";
   document.getElementById("turnOverlay").style.display = "none";
   document.getElementById("resultModal").style.display = "none";
-  document.getElementById("rulesModal").style.display = "none"; // Hide rules on start
+  document.getElementById("rulesModal").style.display = "none";
   document.getElementById("svg1").innerHTML = "";
   document.getElementById("svg2").innerHTML = "";
 
@@ -65,7 +53,6 @@ function startGame(m) {
   render();
 }
 
-/* TURN SWITCHING */
 function triggerSwitch(nP, nPh) {
   nextPlayer = nP;
   nextPhase = nPh;
@@ -73,16 +60,13 @@ function triggerSwitch(nP, nPh) {
   
   const overlay = document.getElementById("turnOverlay");
   const text = document.getElementById("overlayText");
-  
   text.innerText = `Player ${nextPlayer}'s Turn`;
   overlay.style.display = "flex";
-  
   render(); 
 }
 
 function startNextTurn() {
   phase = nextPhase;
-  
   if (phase === "fill") {
     fillPlayer = nextPlayer;
     updateInfo(`Player ${fillPlayer}: Fill numbers 1–15`);
@@ -90,31 +74,24 @@ function startNextTurn() {
     currentPlayer = nextPlayer;
     updateTurnInfo();
   }
-  
   document.getElementById("turnOverlay").style.display = "none";
   render();
-  
   if (mode === "ai" && currentPlayer === 2 && !p2.stuck && phase === "play") {
      setTimeout(aiMove, 500);
   }
 }
 
-/* FILL PHASE */
 function placeNumber(player, pos) {
   if (phase !== "fill") return;
-
   player.grid[pos] = fillNumber;
   fillHistory.push({ player: fillPlayer, pos });
   fillNumber++;
-
   if (fillNumber > 15) {
     fillNumber = 1;
     fillHistory = [];
-
     if (mode === "2p") {
-      if (fillPlayer === 1) {
-        triggerSwitch(2, "fill");
-      } else {
+      if (fillPlayer === 1) triggerSwitch(2, "fill");
+      else {
         p1.stuck = !hasMoves(p1);
         p2.stuck = !hasMoves(p2);
         triggerSwitch(1, "play");
@@ -141,13 +118,11 @@ function undoFill() {
 }
 
 function randomFill(player) {
-  const nums = [...Array(15).keys()].map(i => i + 1)
-    .sort(() => Math.random() - 0.5);
+  const nums = [...Array(15).keys()].map(i => i + 1).sort(() => Math.random() - 0.5);
   let k = 0;
   for (let i = 1; i < 16; i++) player.grid[i] = nums[k++];
 }
 
-/* HELPERS */
 function neighbors(pos) {
   const x = pos % 4, y = Math.floor(pos / 4);
   let r = [];
@@ -155,8 +130,7 @@ function neighbors(pos) {
     for (let dy = -1; dy <= 1; dy++) {
       if (!dx && !dy) continue;
       const nx = x + dx, ny = y + dy;
-      if (nx >= 0 && nx < 4 && ny >= 0 && ny < 4)
-        r.push(ny * 4 + nx);
+      if (nx >= 0 && nx < 4 && ny >= 0 && ny < 4) r.push(ny * 4 + nx);
     }
   return r;
 }
@@ -169,47 +143,32 @@ function isValidMove(p, pos) {
   return !p.visited.has(pos) && neighbors(p.pos).includes(pos);
 }
 
-/* PLAY LOGIC */
 function makeMove(pos) {
   if (phase !== "play" || round >= MAX_ROUNDS) return;
-
   const p = currentPlayer === 1 ? p1 : p2;
   const opponent = currentPlayer === 1 ? p2 : p1;
-
   if (!isValidMove(p, pos)) return;
-
   p.visited.add(pos);
   p.path.push(pos);
   p.pos = pos;
-
   if (currentPlayer === 1) roundP1 = p.grid[pos];
   else roundP2 = p.grid[pos];
-
   p1.stuck = !hasMoves(p1);
   p2.stuck = !hasMoves(p2);
-
   if (opponent.stuck) {
     if (currentPlayer === 1 && roundP2 === null) roundP2 = 0;
     else if (currentPlayer === 2 && roundP1 === null) roundP1 = 0;
-    
     resolveRound();
     if (p1.stuck && p2.stuck) { endGame(); return; }
-
     let name = currentPlayer === 1 ? "Player 1" : (mode === "ai" ? "AI" : "Player 2");
     updateInfo(`${name} moves again (Opponent stuck)`);
     render();
-
-    if (mode === "ai" && currentPlayer === 2 && !p2.stuck) {
-      setTimeout(aiMove, 600);
-    }
-  } 
-  else {
+    if (mode === "ai" && currentPlayer === 2 && !p2.stuck) setTimeout(aiMove, 600);
+  } else {
     let nextP = currentPlayer === 1 ? 2 : 1;
     if (roundP1 !== null && roundP2 !== null) resolveRound();
-
-    if (mode === "2p") {
-      triggerSwitch(nextP, "play");
-    } else {
+    if (mode === "2p") triggerSwitch(nextP, "play");
+    else {
       currentPlayer = nextP;
       updateTurnInfo();
       render();
@@ -227,21 +186,15 @@ function updateTurnInfo() {
 function resolveRound() {
   let winner = "Draw";
   let v1 = roundP1, v2 = roundP2;
-
   if (v1 > v2) { p1.score++; winner = "Player 1"; } 
   else if (v2 > v1) { p2.score++; winner = mode === "ai" ? "AI" : "Player 2"; }
-
   round++;
   addRoundRow(round, v1, v2, winner);
   roundP1 = null;
   roundP2 = null;
-
-  if (round >= MAX_ROUNDS || (p1.stuck && p2.stuck)) {
-    setTimeout(endGame, 100);
-  }
+  if (round >= MAX_ROUNDS || (p1.stuck && p2.stuck)) setTimeout(endGame, 100);
 }
 
-/* AI */
 function getMaxPathLength(curr, visited, depth, depthLimit) {
   if (depth >= depthLimit) return depth;
   let maxDepth = depth;
@@ -280,15 +233,11 @@ function aiMove() {
     let survivalChain = getMaxPathLength(m, p2.visited, 0, searchDepth);
     p2.visited.delete(m);
     let score = (survivalChain * 1000) + p2.grid[m];
-    if (score > bestScore) {
-      bestScore = score;
-      bestMove = m;
-    }
+    if (score > bestScore) { bestScore = score; bestMove = m; }
   }
   makeMove(bestMove);
 }
 
-/* ROUND TABLE */
 function addRoundRow(r, v1, v2, w) {
   const tr = document.createElement("tr");
   tr.innerHTML = `<td>${r}</td><td>${v1}</td><td>${v2}</td><td>${w}</td>`;
@@ -297,27 +246,21 @@ function addRoundRow(r, v1, v2, w) {
   table.scrollIntoView({ behavior: "smooth", block: "end" });
 }
 
-/* RENDER */
 function render() {
   drawGrid(p1, "grid1", showGrid(1));
   drawGrid(p2, "grid2", showGrid(2));
-
   document.getElementById("svg1").innerHTML = "";
   document.getElementById("svg2").innerHTML = "";
-
   if (phase === "play") {
     if (mode === "2p") {
       if (currentPlayer === 1) drawPaths(p1, "svg1", "#C95A2E");
       if (currentPlayer === 2) drawPaths(p2, "svg2", "#1A8ACB");
-    } else {
-      drawPaths(p1, "svg1", "#C95A2E");
-    }
+    } else drawPaths(p1, "svg1", "#C95A2E");
   } 
   else if (phase === "end") {
     drawPaths(p1, "svg1", "#C95A2E");
     drawPaths(p2, "svg2", "#1A8ACB");
   }
-
   document.getElementById("score1").innerText = p1.score;
   document.getElementById("score2").innerText = p2.score;
   document.getElementById("round").innerText = round;
@@ -337,9 +280,8 @@ function drawGrid(p, id, visible) {
   for (let i = 0; i < 16; i++) {
     const c = document.createElement("div");
     c.className = "cell";
-    if (!visible) {
-      c.classList.add("covered");
-    } else {
+    if (!visible) c.classList.add("covered");
+    else {
       if (p.visited.has(i)) c.classList.add("visited");
       if (phase === "play" && isValidMove(p, i)) c.classList.add("valid");
       c.innerText = p.grid[i] ?? "";
@@ -356,9 +298,6 @@ function drawPaths(player, svgId, color) {
   const svg = document.getElementById(svgId);
   const getCenter = (idx) => {
     const c = idx % 4, r = Math.floor(idx / 4);
-    // Logic: 304 is the internal SVG size (viewBox)
-    // 304 / 4 cells = 76px per cell
-    // Half cell = 38px
     return { x: (c * 76) + 38, y: (r * 76) + 38 };
   };
   const path = player.path;
@@ -375,7 +314,6 @@ function drawPaths(player, svgId, color) {
   }
 }
 
-/* UI */
 function updateInfo(msg) {
   document.getElementById("info").innerText = msg;
 }
@@ -383,17 +321,13 @@ function updateInfo(msg) {
 function endGame() {
   if (phase === "end") return;
   phase = "end";
-  
   document.getElementById("turnOverlay").style.display = "none";
   render(); 
-  
   updateInfo("Game Over!");
-  
   let msg = "";
   if (p1.score > p2.score) msg = "🎉 Player 1 Wins! 🎉";
   else if (p2.score > p1.score) msg = mode === "ai" ? "🤖 AI Wins!" : "🎉 Player 2 Wins! 🎉";
   else msg = "🤝 It's a Draw!";
-
   document.getElementById("winnerMsg").innerText = msg;
   document.getElementById("finalP1").innerText = p1.score;
   document.getElementById("finalP2").innerText = p2.score;

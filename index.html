@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Paper Boxing</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -79,9 +79,7 @@
     <p>Player 2 Score: <span id="score2">0</span></p>
   </div>
 
-  <p class="round-text">
-    Round: <span id="round">0</span>/15
-  </p>
+  <p class="round-text">Round: <span id="round">0</span>/15</p>
 
   <table id="roundTable">
     <thead>
@@ -101,5 +99,15 @@
   </div>
 
   <script src="game.js"></script>
+  <script>
+    function toggleRules() {
+      const modal = document.getElementById("rulesModal");
+      if (modal.style.display === "none" || modal.style.display === "") {
+        modal.style.display = "block";
+      } else {
+        modal.style.display = "none";
+      }
+    }
+  </script>
 </body>
 </html>

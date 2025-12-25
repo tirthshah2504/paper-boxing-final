@@ -1,20 +1,21 @@
 /* GLOBAL RESET */
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   margin: 0;
-  padding: 10px; /* Reduced padding for mobile */
+  padding: 10px;
   background: #FEFBE3;
   font-family: Arial, sans-serif;
   text-align: center;
-  /* Prevent horizontal scroll on mobile */
+  width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
 }
 
-/* RULES BUTTON (Top Right) */
+/* RULES BUTTON */
 .rules-btn {
   position: fixed;
   top: 15px;
@@ -34,18 +35,15 @@ body {
   touch-action: manipulation;
 }
 
-.rules-btn:hover {
-  transform: scale(1.1);
-  background: #1A8ACB;
-}
-
-/* RULES MODAL POPUP */
+/* RULES MODAL */
 .rules-modal {
   position: fixed;
   top: 70px;
   right: 20px;
   width: 300px;
-  max-width: 90vw; /* Responsive width */
+  max-width: 90vw;
+  max-height: 80vh; 
+  overflow-y: auto;
   background: #FFF7E2;
   border: 3px solid #1A8ACB;
   border-radius: 15px;
@@ -53,12 +51,6 @@ body {
   z-index: 299;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   text-align: left;
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .rules-content h3 {
@@ -70,14 +62,6 @@ body {
 
 .rules-content ul {
   padding-left: 20px;
-  margin-bottom: 0;
-}
-
-.rules-content li {
-  margin-bottom: 10px;
-  color: #333;
-  font-size: 0.95rem;
-  line-height: 1.4;
 }
 
 .close-rules {
@@ -93,9 +77,9 @@ body {
 /* LOGO */
 .game-logo {
   max-width: 400px;
-  width: 90%; /* Responsive width */
+  width: 85%;
   height: auto;
-  margin: 0 auto 10px auto;
+  margin: 10px auto;
   display: block;
 }
 
@@ -147,36 +131,25 @@ body {
   background: #FEFBE3;
   border: 4px solid #C95A2E;
   border-radius: 20px;
-  padding: 25px;
+  padding: 20px;
   width: 340px;
   max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  animation: popIn 0.3s ease-out;
-}
-
-@keyframes popIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
 }
 
 .result-content h2 {
   color: #C95A2E;
-  margin-top: 0;
   font-size: 1.8rem;
-}
-
-.winner-text {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #1A8ACB;
-  margin: 15px 0;
+  margin: 10px 0;
 }
 
 .final-score {
   display: flex;
   justify-content: space-around;
-  margin: 20px 0;
+  margin: 15px 0;
   background: #FFF7E2;
   padding: 10px;
   border-radius: 10px;
@@ -189,16 +162,8 @@ body {
   font-weight: bold;
 }
 
-.p-score span:first-child {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 4px;
-}
-
-.p-score span:last-child {
-  font-size: 1.6rem;
-  color: #111;
-}
+.p-score span:first-child { font-size: 0.9rem; color: #555; }
+.p-score span:last-child { font-size: 1.6rem; color: #111; }
 
 .result-content button {
   background: #FFEB8A;
@@ -214,7 +179,7 @@ body {
 /* MENU */
 .menu-card {
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping on small screens */
+  flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
 }
@@ -222,11 +187,10 @@ body {
 .menu-card button {
   background: #FFEB8A;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border-radius: 18px;
   font-size: 1rem;
   cursor: pointer;
-  touch-action: manipulation;
 }
 
 .info-text {
@@ -244,40 +208,31 @@ body {
   width: 100%;
 }
 
-/* BOARD WRAPPER (Responsive) */
+/* BOARD WRAPPER */
 .board-wrapper {
   position: relative;
-  /* Fixed size for desktop, scales down on mobile via media query */
-  width: 420px;
+  /* Desktop size */
+  width: 420px; 
   height: 420px;
-  
-  /* Maintain square aspect ratio if scaled */
-  aspect-ratio: 1 / 1;
   
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-.dark-board {
-  background-image: url("assets/board-dark.png");
-}
+.dark-board { background-image: url("assets/board-dark.png"); }
+.light-board { background-image: url("assets/board-light.png"); }
 
-.light-board {
-  background-image: url("assets/board-light.png");
-}
-
-/* SVG PATH OVERLAY (Responsive %) */
+/* SVG */
 .path-svg {
   position: absolute;
-  /* 58px / 420px ≈ 13.81% */
+  /* Matches grid offset */
   top: 13.81%;
   left: 13.81%;
-  /* 304px / 420px ≈ 72.38% */
   width: 72.38%;
   height: 72.38%;
   pointer-events: none;
-  z-index: 5; 
+  z-index: 5;
 }
 
 .path-svg line {
@@ -286,52 +241,48 @@ body {
   opacity: 0.7;
 }
 
-/* GRID OVERLAY (Responsive %) */
+/* GRID OVERLAY - THE FIX */
 .grid-overlay {
   position: absolute;
   top: 13.81%;
   left: 13.81%;
   width: 72.38%;
   height: 72.38%;
-
+  
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-
-  background-image:
-    linear-gradient(to right, rgba(255,255,255,0.55) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.55) 1px, transparent 1px);
-
-  background-size:
-    calc(100% / 4) 100%,
-    100% calc(100% / 4);
-
-  border-right: 1px solid rgba(255,255,255,0.55);
-  border-bottom: 1px solid rgba(255,255,255,0.55);
+  
+  /* Outer Borders (Top & Left) */
+  border-top: 1px solid rgba(255,255,255,0.55);
+  border-left: 1px solid rgba(255,255,255,0.55);
 
   pointer-events: auto;
   z-index: 10;
+  touch-action: none; 
 }
 
-/* CELLS */
+/* CELLS - THE FIX */
 .cell {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Font size responsive: using 'vmin' or media query might be safer */
   font-size: 1.4rem;
   font-weight: bold;
   color: #111;
   cursor: pointer;
   user-select: none;
-  touch-action: manipulation; /* Prevents double-tap zoom delay */
+  
+  /* Inner Borders (Bottom & Right) */
+  border-right: 1px solid rgba(255,255,255,0.55);
+  border-bottom: 1px solid rgba(255,255,255,0.55);
 }
 
 .valid { background: rgba(255,255,255,0.15); }
 .visited { color: #000; }
 .covered { color: transparent; cursor: not-allowed; }
 
-/* SCORES */
+/* SCORES & TABLE */
 .scores {
   display: flex;
   justify-content: center;
@@ -341,34 +292,23 @@ body {
   flex-wrap: wrap;
 }
 
-/* ROUND */
-.round-text {
-  margin-top: 10px;
-  font-weight: bold;
-}
+.round-text { margin-top: 10px; font-weight: bold; }
 
-/* ROUND TABLE */
 #roundTable {
   margin: 20px auto;
   border-collapse: collapse;
   background: #FFF7E2;
-  width: 90%;
+  width: 95%;
   max-width: 500px;
-  font-size: 0.9rem;
 }
 
-#roundTable th,
-#roundTable td {
+#roundTable th, #roundTable td {
   border: 1px solid #333;
   padding: 6px 4px;
   text-align: center;
 }
+#roundTable th { background: #FBC498; }
 
-#roundTable th {
-  background: #FBC498;
-}
-
-/* CONTROLS */
 .controls button {
   background: #FFEB8A;
   border: none;
@@ -388,23 +328,22 @@ body {
   }
 
   .board-wrapper {
-    /* Board takes up 85% of screen width on mobile, capped at 420px */
-    width: 85vw;
-    height: 85vw;
+    /* vmin calculates based on the smaller screen dimension */
+    /* This forces a PERFECT SQUARE that fits on screen */
+    width: 85vmin;
+    height: 85vmin;
+    
     max-width: 420px;
     max-height: 420px;
+    
+    margin: 20px auto; /* Center alignment */
   }
   
   .cell {
-    font-size: 1.1rem; /* Smaller numbers on mobile */
+    /* Font size scales with square size */
+    font-size: 5vmin; 
   }
 
-  .scores {
-    gap: 15px;
-    font-size: 0.9rem;
-  }
-
-  .game-logo {
-    margin-top: 40px; /* Space for the fixed rules button */
-  }
+  .scores { font-size: 0.9rem; }
+  .game-logo { margin-top: 50px; }
 }
