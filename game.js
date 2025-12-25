@@ -341,5 +341,5 @@ function resetGame() {
   location.reload();
 }
 
-// FIX 2: Render grid lines immediately on page load
+// FIX 2: Render grid lines immediately on page load to avoid blank screen
 render();
