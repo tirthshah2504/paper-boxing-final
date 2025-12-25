@@ -1,0 +1,373 @@
+/* GLOBAL RESET */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #FEFBE3;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* LOGO */
+.game-logo {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 20px auto;
+  display: block;
+}
+
+/* TURN OVERLAY */
+.turn-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(254, 251, 227, 0.98);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-content h2 {
+  color: #1A8ACB;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.overlay-content button {
+  background: #FFEB8A;
+  border: 2px solid #C95A2E;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* RESULT MODAL (NEW) */
+.result-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dim background */
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-content {
+  background: #FEFBE3;
+  border: 4px solid #C95A2E;
+  border-radius: 20px;
+  padding: 30px;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.result-content h2 {
+  color: #C95A2E;
+  margin-top: 0;
+  font-size: 2rem;
+}
+
+.winner-text {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #1A8ACB;
+  margin: 15px 0;
+}
+
+.final-score {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  background: #FFF7E2;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.p-score {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.p-score span:first-child {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.p-score span:last-child {
+  font-size: 1.8rem;
+  color: #111;
+}
+
+.result-content button {
+  background: #FFEB8A;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #FBC498;
+  transition: transform 0.1s;
+}
+
+.result-content button:active {
+  box-shadow: 0 2px 0 #FBC498;
+  transform: translateY(2px);
+}
+
+/* MENU */
+.menu-card button {
+  background: #FFEB8A;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 18px;
+  font-size: 1rem;
+  margin: 0 8px;
+  cursor: pointer;
+}
+
+.info-text {
+  color: #C95A2E;
+  font-size: 1.1rem;
+  margin-top: 15px;
+}
+
+/* BOARDS */
+.boards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.board-wrapper {
+  position: relative;
+  width: 420px;
+  height: 420px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.dark-board {
+  background-image: url("assets/board-dark.png");
+}
+
+.light-board {
+  background-image: url("assets/board-light.png");
+}
+
+/* SVG PATH OVERLAY */
+.path-svg {
+  position: absolute;
+  top: 58px;
+  left: 58px;
+  width: 304px;
+  height: 304px;
+  pointer-events: none;
+  z-index: 5; 
+}
+
+.path-svg line {
+  stroke-width: 4;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+
+/* GRID OVERLAY */
+.grid-overlay {
+  position: absolute;
+  top: 58px;
+  left: 58px;
+  right: 58px;
+  bottom: 58px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.55) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.55) 1px, transparent 1px);
+
+  background-size:
+    calc(100% / 4) 100%,
+    100% calc(100% / 4);
+
+  border-right: 1px solid rgba(255,255,255,0.55);
+  border-bottom: 1px solid rgba(255,255,255,0.55);
+
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* CELLS */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #111;
+  cursor: pointer;
+  user-select: none;
+}
+
+.valid {
+  background: rgba(255,255,255,0.15);
+}
+
+.visited {
+  color: #000;
+}
+
+.covered {
+  color: transparent;
+  cursor: not-allowed;
+}
+
+/* SCORES */
+.scores {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+/* ROUND */
+.round-text {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* ROUND TABLE */
+#roundTable {
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: #FFF7E2;
+}
+
+#roundTable th,
+#roundTable td {
+  border: 1px solid #333;
+  padding: 6px 12px;
+  text-align: center;
+}
+
+#roundTable th {
+  background: #FBC498;
+}
+
+/* CONTROLS */
+.controls button {
+  background: #FFEB8A;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 18px;
+  font-size: 1rem;
+  margin: 6px;
+  cursor: pointer;
+}
+
+/* ... (Keep all your existing CSS) ... */
+
+/* RULES BUTTON (Top Right) */
+.rules-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  background: #C95A2E;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 300;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.rules-btn:hover {
+  transform: scale(1.1);
+  background: #1A8ACB;
+}
+
+/* RULES MODAL POPUP */
+.rules-modal {
+  position: fixed;
+  top: 75px; /* Just below the button */
+  right: 20px;
+  width: 300px;
+  background: #FFF7E2;
+  border: 3px solid #1A8ACB;
+  border-radius: 15px;
+  padding: 20px;
+  z-index: 299;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: left;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rules-content h3 {
+  margin-top: 0;
+  color: #C95A2E;
+  border-bottom: 2px solid #FBC498;
+  padding-bottom: 10px;
+}
+
+.rules-content ul {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+
+.rules-content li {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.close-rules {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+}
+
+.close-rules:hover {
+  color: #C95A2E;
+}

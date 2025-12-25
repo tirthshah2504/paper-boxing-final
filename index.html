@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paper Boxing</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <button class="rules-btn" onclick="toggleRules()">?</button>
+
+  <div id="rulesModal" class="rules-modal" style="display: none;">
+    <div class="rules-content">
+      <span class="close-rules" onclick="toggleRules()">&times;</span>
+      <h3>🥊 Game Rules</h3>
+      <ul>
+        <li><strong>Setup:</strong> Fill numbers 1–15 in the grid. Leave top-left empty.</li>
+        <li><strong>Start:</strong> Move from the empty corner to a neighbor.</li>
+        <li><strong>Move:</strong> Extend your line to any unused neighbor (including diagonals).</li>
+        <li><strong>Score:</strong> Higher number wins the round (1 point).</li>
+        <li><strong>Stuck:</strong> If you can't move, you score 0 for remaining rounds.</li>
+        <li><strong>Goal:</strong> Win the most rounds out of 15!</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="turnOverlay" class="turn-overlay" style="display: none;">
+    <div class="overlay-content">
+      <h2 id="overlayText">Player 2's Turn</h2>
+      <button onclick="startNextTurn()">Start Turn</button>
+    </div>
+  </div>
+
+  <div id="resultModal" class="result-modal" style="display: none;">
+    <div class="result-content">
+      <h2>🥊 Game Over! 🥊</h2>
+      <p id="winnerMsg" class="winner-text"></p>
+      
+      <div class="final-score">
+        <div class="p-score">
+          <span>Player 1</span>
+          <span id="finalP1">0</span>
+        </div>
+        <div class="p-score">
+          <span>Player 2</span>
+          <span id="finalP2">0</span>
+        </div>
+      </div>
+
+      <button onclick="resetGame()">Play Again</button>
+    </div>
+  </div>
+
+  <img src="assets/logo.png" alt="Paper Boxing" class="game-logo" />
+
+  <div class="menu-card">
+    <button onclick="startGame('ai')">Single Player vs AI</button>
+    <button onclick="startGame('2p')">Two Player</button>
+  </div>
+
+  <p id="info" class="info-text">Choose a mode to start</p>
+
+  <div class="boards">
+    <div class="board-wrapper dark-board">
+      <svg id="svg1" class="path-svg"></svg>
+      <div class="grid-overlay" id="grid1"></div>
+    </div>
+
+    <div class="board-wrapper light-board">
+      <svg id="svg2" class="path-svg"></svg>
+      <div class="grid-overlay" id="grid2"></div>
+    </div>
+  </div>
+
+  <div class="scores">
+    <p>Player 1 Score: <span id="score1">0</span></p>
+    <p>Player 2 Score: <span id="score2">0</span></p>
+  </div>
+
+  <p class="round-text">
+    Round: <span id="round">0</span>/15
+  </p>
+
+  <table id="roundTable">
+    <thead>
+      <tr>
+        <th>Round</th>
+        <th>Player 1</th>
+        <th>Player 2</th>
+        <th>Winner</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="controls">
+    <button onclick="undoFill()">Undo (Fill)</button>
+    <button onclick="resetGame()">Restart</button>
+  </div>
+
+  <script src="game.js"></script>
+  
+  <script>
+    function toggleRules() {
+      const modal = document.getElementById("rulesModal");
+      if (modal.style.display === "none" || modal.style.display === "") {
+        modal.style.display = "block";
+      } else {
+        modal.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
