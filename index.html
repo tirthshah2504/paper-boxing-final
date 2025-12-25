@@ -12,17 +12,55 @@
   <button class="rules-btn" onclick="toggleRules()">?</button>
 
   <div id="rulesModal" class="rules-modal" style="display: none;">
-    <div class="rules-content">
-      <span class="close-rules" onclick="toggleRules()">&times;</span>
+    
+    <div class="rules-header">
       <h3>🥊 Game Rules</h3>
-      <ul>
-        <li><strong>Setup:</strong> Fill numbers 1–15. Top-left empty.</li>
-        <li><strong>Start:</strong> Move from the empty corner to a neighbor.</li>
-        <li><strong>Move:</strong> Extend line to any unused neighbor (inc. diagonal).</li>
-        <li><strong>Score:</strong> Higher number wins (1 point).</li>
-        <li><strong>Stuck:</strong> Can't move? 0 points for remaining rounds.</li>
-        <li><strong>Goal:</strong> Win most of 15 rounds!</li>
-      </ul>
+      <span class="close-rules" onclick="toggleRules()">&times;</span>
+    </div>
+
+    <div class="rules-body">
+      
+      <div class="rule-item">
+        <div class="rule-text">
+          <strong>1. Setup</strong>
+          <p>The top-left corner is always empty. Fill the rest with numbers 1–15 by tapping on the grid to place numbers.</p>
+        </div>
+        <img src="assets/rule-empty.jpeg" alt="Empty Corner" class="rule-img">
+        <img src="assets/rule-filled.jpeg" alt="Filled Grid" class="rule-img">
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-text">
+          <strong>2. Start</strong>
+          <p>Start by drawing a line from the empty corner to any neighbor (up, down, left, right, or diagonal).</p>
+        </div>
+        <img src="assets/rule-highlight.png" alt="Highlighted Neighbors" class="rule-img">
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-text">
+          <strong>3. How to make a Move</strong>
+          <p>Extend your line to a new number each turn. You cannot visit a number twice! If stuck, you score 0 for remaining rounds.</p>
+        </div>
+        <img src="assets/rule-lines.jpeg" alt="Path Lines" class="rule-img">
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-text">
+          <strong>4. Scoring</strong>
+          <p>In each round, compare the numbers both players selected. The higher number gets 1 point.</p>
+        </div>
+        <img src="assets/rule-table.png" alt="Score Table" class="rule-img">
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-text">
+          <strong>5. Goal</strong>
+          <p>Win the most rounds out of 15 to become the Paper Boxing Champion!</p>
+        </div>
+        <img src="assets/rule-gameover.png" alt="Game Over" class="rule-img">
+      </div>
+
     </div>
   </div>
 

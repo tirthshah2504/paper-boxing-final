@@ -15,7 +15,7 @@ body {
   overflow-x: hidden;
 }
 
-/* RULES BUTTON */
+/* --- RULES BUTTON --- */
 .rules-btn {
   position: fixed;
   top: 15px;
@@ -35,46 +35,120 @@ body {
   touch-action: manipulation;
 }
 
-/* RULES MODAL */
+.rules-btn:hover {
+  transform: scale(1.1);
+  background: #1A8ACB;
+}
+
+/* --- RULES MODAL --- */
 .rules-modal {
   position: fixed;
-  top: 70px;
-  right: 20px;
-  width: 300px;
-  max-width: 90vw;
-  max-height: 80vh; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  max-height: 85vh;
   overflow-y: auto;
   background: #FFF7E2;
-  border: 3px solid #1A8ACB;
-  border-radius: 15px;
-  padding: 20px;
+  border: 4px solid #1A8ACB;
+  border-radius: 20px;
+  padding: 0;
   z-index: 299;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
   text-align: left;
 }
 
-.rules-content h3 {
-  margin-top: 0;
-  color: #C95A2E;
+.rules-header {
+  background: #FFEB8A;
+  padding: 15px 20px;
   border-bottom: 2px solid #FBC498;
-  padding-bottom: 10px;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
 }
 
-.rules-content ul {
-  padding-left: 20px;
+.rules-header h3 {
+  margin: 0;
+  color: #C95A2E;
+  font-size: 1.5rem;
 }
 
 .close-rules {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
-  color: #888;
+  color: #C95A2E;
   cursor: pointer;
+  line-height: 1;
 }
 
-/* LOGO */
+.rules-body {
+  padding: 20px;
+}
+
+/* RULE ITEMS */
+.rule-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.rule-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.rule-text {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.rule-text strong {
+  display: block;
+  color: #1A8ACB;
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+.rule-text p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* --- IMAGE STYLING FIX --- */
+.rule-img {
+  /* Make them big and responsive */
+  width: 100%; 
+  max-width: 280px; 
+  
+  /* Force a perfect square shape */
+  aspect-ratio: 1 / 1;
+  
+  /* Force image to fill the square completely (no gaps) */
+  object-fit: cover;
+  
+  border-radius: 12px;
+  border: 3px solid #C95A2E; /* Slightly thicker border */
+  display: block;
+  margin-bottom: 15px; /* Space if there are multiple images */
+}
+
+/* Remove bottom margin from the last image in a group */
+.rule-img:last-child {
+  margin-bottom: 0;
+}
+
+
+/* --- LOGO --- */
 .game-logo {
   max-width: 400px;
   width: 85%;
@@ -83,7 +157,7 @@ body {
   display: block;
 }
 
-/* TURN OVERLAY */
+/* --- TURN OVERLAY --- */
 .turn-overlay {
   position: fixed;
   top: 0;
@@ -113,7 +187,7 @@ body {
   font-weight: bold;
 }
 
-/* RESULT MODAL */
+/* --- RESULT MODAL --- */
 .result-modal {
   position: fixed;
   top: 0;
@@ -138,6 +212,12 @@ body {
   overflow-y: auto;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 .result-content h2 {
@@ -176,7 +256,7 @@ body {
   box-shadow: 0 4px 0 #FBC498;
 }
 
-/* MENU */
+/* --- MENU & CONTROLS --- */
 .menu-card {
   display: flex;
   flex-wrap: wrap;
@@ -199,7 +279,24 @@ body {
   margin-top: 15px;
 }
 
-/* BOARDS CONTAINER */
+.controls {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.controls button {
+  background: #FFEB8A;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 18px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* --- BOARDS CONTAINER --- */
 .boards {
   display: flex;
   justify-content: center;
@@ -208,14 +305,12 @@ body {
   width: 100%;
 }
 
-/* BOARD WRAPPER */
+/* --- BOARD WRAPPER --- */
 .board-wrapper {
   position: relative;
-  /* Desktop size */
   width: 420px; 
   height: 420px;
-  
-  background-size: contain;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -223,10 +318,8 @@ body {
 .dark-board { background-image: url("assets/board-dark.png"); }
 .light-board { background-image: url("assets/board-light.png"); }
 
-/* SVG */
 .path-svg {
   position: absolute;
-  /* Matches grid offset */
   top: 13.81%;
   left: 13.81%;
   width: 72.38%;
@@ -241,28 +334,23 @@ body {
   opacity: 0.7;
 }
 
-/* GRID OVERLAY - THE FIX */
+/* --- GRID OVERLAY --- */
 .grid-overlay {
   position: absolute;
   top: 13.81%;
   left: 13.81%;
   width: 72.38%;
   height: 72.38%;
-  
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  
-  /* Outer Borders (Top & Left) */
   border-top: 1px solid rgba(255,255,255,0.55);
   border-left: 1px solid rgba(255,255,255,0.55);
-
   pointer-events: auto;
   z-index: 10;
-  touch-action: none; 
+  touch-action: none;
 }
 
-/* CELLS - THE FIX */
 .cell {
   display: flex;
   align-items: center;
@@ -272,8 +360,6 @@ body {
   color: #111;
   cursor: pointer;
   user-select: none;
-  
-  /* Inner Borders (Bottom & Right) */
   border-right: 1px solid rgba(255,255,255,0.55);
   border-bottom: 1px solid rgba(255,255,255,0.55);
 }
@@ -282,7 +368,7 @@ body {
 .visited { color: #000; }
 .covered { color: transparent; cursor: not-allowed; }
 
-/* SCORES & TABLE */
+/* --- SCORES & TABLE --- */
 .scores {
   display: flex;
   justify-content: center;
@@ -309,16 +395,6 @@ body {
 }
 #roundTable th { background: #FBC498; }
 
-.controls button {
-  background: #FFEB8A;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 18px;
-  font-size: 1rem;
-  margin: 6px;
-  cursor: pointer;
-}
-
 /* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 900px) {
   .boards {
@@ -328,20 +404,17 @@ body {
   }
 
   .board-wrapper {
-    /* vmin calculates based on the smaller screen dimension */
-    /* This forces a PERFECT SQUARE that fits on screen */
     width: 85vmin;
     height: 85vmin;
-    
     max-width: 420px;
     max-height: 420px;
-    
-    margin: 20px auto; /* Center alignment */
+    margin: 20px auto;
   }
   
-  .cell {
-    /* Font size scales with square size */
-    font-size: 5vmin; 
+  .cell { font-size: 5vmin; }
+
+  @media (min-width: 500px) {
+    .cell { font-size: 1.4rem; }
   }
 
   .scores { font-size: 0.9rem; }
