@@ -5,7 +5,10 @@ let fillPlayer = 1;
 let currentPlayer = 1;
 let round = 0;
 
-let p1, p2;
+// FIX 1: Initialize empty players immediately so grid renders on load
+let p1 = new Player();
+let p2 = new Player();
+
 let fillNumber = 1;
 let fillHistory = [];
 
@@ -337,3 +340,6 @@ function endGame() {
 function resetGame() {
   location.reload();
 }
+
+// FIX 2: Render grid lines immediately on page load
+render();
