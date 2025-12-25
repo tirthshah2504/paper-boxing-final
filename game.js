@@ -12,7 +12,6 @@ let fillHistory = [];
 let roundP1 = null;
 let roundP2 = null;
 
-// Temporary variables for turn switching
 let nextPlayer = 1;
 let nextPhase = "fill";
 
@@ -26,6 +25,16 @@ class Player {
     this.score = 0;
     this.stuck = false;
     this.isAI = isAI;
+  }
+}
+
+/* RULES TOGGLE */
+function toggleRules() {
+  const modal = document.getElementById("rulesModal");
+  if (modal.style.display === "none" || modal.style.display === "") {
+    modal.style.display = "block";
+  } else {
+    modal.style.display = "none";
   }
 }
 
@@ -47,7 +56,8 @@ function startGame(m) {
 
   document.querySelector("#roundTable tbody").innerHTML = "";
   document.getElementById("turnOverlay").style.display = "none";
-  document.getElementById("resultModal").style.display = "none"; // Hide result modal on start
+  document.getElementById("resultModal").style.display = "none";
+  document.getElementById("rulesModal").style.display = "none"; // Hide rules on start
   document.getElementById("svg1").innerHTML = "";
   document.getElementById("svg2").innerHTML = "";
 
@@ -346,6 +356,9 @@ function drawPaths(player, svgId, color) {
   const svg = document.getElementById(svgId);
   const getCenter = (idx) => {
     const c = idx % 4, r = Math.floor(idx / 4);
+    // Logic: 304 is the internal SVG size (viewBox)
+    // 304 / 4 cells = 76px per cell
+    // Half cell = 38px
     return { x: (c * 76) + 38, y: (r * 76) + 38 };
   };
   const path = player.path;
@@ -368,21 +381,19 @@ function updateInfo(msg) {
 }
 
 function endGame() {
-  if (phase === "end") return; // PREVENT DOUBLE TRIGGER
+  if (phase === "end") return;
   phase = "end";
   
   document.getElementById("turnOverlay").style.display = "none";
-  render(); // Update board to show all lines
+  render(); 
   
   updateInfo("Game Over!");
   
-  // DETERMINE WINNER TEXT
   let msg = "";
   if (p1.score > p2.score) msg = "🎉 Player 1 Wins! 🎉";
   else if (p2.score > p1.score) msg = mode === "ai" ? "🤖 AI Wins!" : "🎉 Player 2 Wins! 🎉";
   else msg = "🤝 It's a Draw!";
 
-  // SHOW CUSTOM MODAL
   document.getElementById("winnerMsg").innerText = msg;
   document.getElementById("finalP1").innerText = p1.score;
   document.getElementById("finalP2").innerText = p2.score;

@@ -16,12 +16,12 @@
       <span class="close-rules" onclick="toggleRules()">&times;</span>
       <h3>🥊 Game Rules</h3>
       <ul>
-        <li><strong>Setup:</strong> Fill numbers 1–15 in the grid. Leave top-left empty.</li>
+        <li><strong>Setup:</strong> Fill numbers 1–15. Top-left empty.</li>
         <li><strong>Start:</strong> Move from the empty corner to a neighbor.</li>
-        <li><strong>Move:</strong> Extend your line to any unused neighbor (including diagonals).</li>
-        <li><strong>Score:</strong> Higher number wins the round (1 point).</li>
-        <li><strong>Stuck:</strong> If you can't move, you score 0 for remaining rounds.</li>
-        <li><strong>Goal:</strong> Win the most rounds out of 15!</li>
+        <li><strong>Move:</strong> Extend line to any unused neighbor (inc. diagonal).</li>
+        <li><strong>Score:</strong> Higher number wins (1 point).</li>
+        <li><strong>Stuck:</strong> Can't move? 0 points for remaining rounds.</li>
+        <li><strong>Goal:</strong> Win most of 15 rounds!</li>
       </ul>
     </div>
   </div>
@@ -64,12 +64,12 @@
 
   <div class="boards">
     <div class="board-wrapper dark-board">
-      <svg id="svg1" class="path-svg"></svg>
+      <svg id="svg1" class="path-svg" viewBox="0 0 304 304"></svg>
       <div class="grid-overlay" id="grid1"></div>
     </div>
 
     <div class="board-wrapper light-board">
-      <svg id="svg2" class="path-svg"></svg>
+      <svg id="svg2" class="path-svg" viewBox="0 0 304 304"></svg>
       <div class="grid-overlay" id="grid2"></div>
     </div>
   </div>
@@ -101,16 +101,5 @@
   </div>
 
   <script src="game.js"></script>
-  
-  <script>
-    function toggleRules() {
-      const modal = document.getElementById("rulesModal");
-      if (modal.style.display === "none" || modal.style.display === "") {
-        modal.style.display = "block";
-      } else {
-        modal.style.display = "none";
-      }
-    }
-  </script>
 </body>
 </html>
