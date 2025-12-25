@@ -1,11 +1,25 @@
 const MAX_ROUNDS = 15;
 
+/* 1. DEFINE PLAYER CLASS FIRST (Fixes the crash) */
+class Player {
+  constructor(isAI = false) {
+    this.grid = Array(16).fill(null);
+    this.visited = new Set([0]); // Top-left (index 0) is starting point
+    this.path = [0];             // Path history
+    this.pos = 0;                // Current position
+    this.score = 0;
+    this.stuck = false;
+    this.isAI = isAI;
+  }
+}
+
+/* 2. INITIALIZE VARIABLES */
 let mode, phase = "fill";
 let fillPlayer = 1;
 let currentPlayer = 1;
 let round = 0;
 
-// FIX 1: Initialize empty players immediately so grid renders on load
+// Now it is safe to create players
 let p1 = new Player();
 let p2 = new Player();
 
@@ -18,18 +32,7 @@ let roundP2 = null;
 let nextPlayer = 1;
 let nextPhase = "fill";
 
-class Player {
-  constructor(isAI = false) {
-    this.grid = Array(16).fill(null);
-    this.visited = new Set([0]);
-    this.path = [0];
-    this.pos = 0;
-    this.score = 0;
-    this.stuck = false;
-    this.isAI = isAI;
-  }
-}
-
+/* 3. GAME FUNCTIONS */
 function startGame(m) {
   mode = m;
   phase = "fill";
@@ -341,5 +344,5 @@ function resetGame() {
   location.reload();
 }
 
-// FIX 2: Render grid lines immediately on page load to avoid blank screen
+// 4. Initial Render Call (Ensures grid visible on load)
 render();
