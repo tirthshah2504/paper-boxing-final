@@ -1,25 +1,24 @@
 const MAX_ROUNDS = 15;
 
-/* 1. DEFINE PLAYER CLASS FIRST (Fixes the crash) */
+/* DEFINE PLAYER CLASS */
 class Player {
   constructor(isAI = false) {
     this.grid = Array(16).fill(null);
-    this.visited = new Set([0]); // Top-left (index 0) is starting point
-    this.path = [0];             // Path history
-    this.pos = 0;                // Current position
+    this.visited = new Set([0]);
+    this.path = [0];
+    this.pos = 0;
     this.score = 0;
     this.stuck = false;
     this.isAI = isAI;
   }
 }
 
-/* 2. INITIALIZE VARIABLES */
+/* INITIALIZE VARIABLES */
 let mode, phase = "fill";
 let fillPlayer = 1;
 let currentPlayer = 1;
 let round = 0;
 
-// Now it is safe to create players
 let p1 = new Player();
 let p2 = new Player();
 
@@ -29,10 +28,11 @@ let fillHistory = [];
 let roundP1 = null;
 let roundP2 = null;
 
-let nextPlayer = 1;
-let nextPhase = "fill";
+// New Switch Logic
+let nextPlayerTarget = 1;
+let nextPhaseTarget = "fill";
 
-/* 3. GAME FUNCTIONS */
+/* GAME FUNCTIONS */
 function startGame(m) {
   mode = m;
   phase = "fill";
@@ -43,13 +43,17 @@ function startGame(m) {
   fillHistory = [];
   roundP1 = roundP2 = null;
 
+  // Lock Mode Buttons
+  document.getElementById("btn-ai").disabled = true;
+  document.getElementById("btn-2p").disabled = true;
+  document.getElementById("passBtn").style.display = "none";
+
   p1 = new Player(false);
   p2 = new Player(mode === "ai");
 
   if (mode === "ai") randomFill(p2);
 
   document.querySelector("#roundTable tbody").innerHTML = "";
-  document.getElementById("turnOverlay").style.display = "none";
   document.getElementById("resultModal").style.display = "none";
   document.getElementById("rulesModal").style.display = "none";
   document.getElementById("svg1").innerHTML = "";
@@ -59,55 +63,88 @@ function startGame(m) {
   render();
 }
 
+/* --- SWITCHING LOGIC --- */
+
+// 1. Called when a turn ends
 function triggerSwitch(nP, nPh) {
-  nextPlayer = nP;
-  nextPhase = nPh;
+  // If AI, skip the button and go straight to next turn
+  if (mode === "ai") {
+    executeTurnSwitch(nP, nPh);
+    return;
+  }
+
+  // If 2-Player, pause and show button
   phase = "switching";
+  nextPlayerTarget = nP;
+  nextPhaseTarget = nPh;
   
-  const overlay = document.getElementById("turnOverlay");
-  const text = document.getElementById("overlayText");
-  text.innerText = `Player ${nextPlayer}'s Turn`;
-  overlay.style.display = "flex";
+  const btn = document.getElementById("passBtn");
+  btn.innerText = `Start Player ${nP}'s Turn`;
+  btn.style.display = "inline-block";
+  
+  updateInfo(`Pass device to Player ${nP}`);
   render(); 
 }
 
-function startNextTurn() {
-  phase = nextPhase;
+// 2. Called when button is clicked
+function finishSwitch() {
+  document.getElementById("passBtn").style.display = "none";
+  executeTurnSwitch(nextPlayerTarget, nextPhaseTarget);
+}
+
+// 3. Executes the actual logic
+function executeTurnSwitch(nP, nPh) {
+  phase = nPh;
+  
   if (phase === "fill") {
-    fillPlayer = nextPlayer;
+    fillPlayer = nP;
     updateInfo(`Player ${fillPlayer}: Fill numbers 1–15`);
   } else if (phase === "play") {
-    currentPlayer = nextPlayer;
+    currentPlayer = nP;
     updateTurnInfo();
   }
-  document.getElementById("turnOverlay").style.display = "none";
+  
   render();
+
+  // Trigger AI if needed
   if (mode === "ai" && currentPlayer === 2 && !p2.stuck && phase === "play") {
      setTimeout(aiMove, 500);
   }
 }
+
+/* --- GAMEPLAY --- */
 
 function placeNumber(player, pos) {
   if (phase !== "fill") return;
   player.grid[pos] = fillNumber;
   fillHistory.push({ player: fillPlayer, pos });
   fillNumber++;
+  
+  // When grid is full (reached 16)
   if (fillNumber > 15) {
     fillNumber = 1;
     fillHistory = [];
-    if (mode === "2p") {
-      if (fillPlayer === 1) triggerSwitch(2, "fill");
-      else {
+    
+    // --- FIX FOR AI CRASH IS HERE ---
+    if (mode === "ai") {
+        // AI is already filled, skip to Play Phase immediately
+        phase = "play";
         p1.stuck = !hasMoves(p1);
         p2.stuck = !hasMoves(p2);
-        triggerSwitch(1, "play");
-      }
+        updateInfo("Player 1 turn");
+        render();
+        return; 
+    }
+    // --------------------------------
+
+    // 2-Player Mode Logic
+    if (fillPlayer === 1) {
+      triggerSwitch(2, "fill");
     } else {
-      phase = "play";
+      // Both filled, start playing
       p1.stuck = !hasMoves(p1);
       p2.stuck = !hasMoves(p2);
-      updateInfo("Player 1 turn");
-      render();
+      triggerSwitch(1, "play");
     }
     return;
   }
@@ -123,6 +160,52 @@ function undoFill() {
   render();
 }
 
+function makeMove(pos) {
+  if (phase !== "play" || round >= MAX_ROUNDS) return;
+  const p = currentPlayer === 1 ? p1 : p2;
+  const opponent = currentPlayer === 1 ? p2 : p1;
+  
+  if (!isValidMove(p, pos)) return;
+  
+  p.visited.add(pos);
+  p.path.push(pos);
+  p.pos = pos;
+  
+  if (currentPlayer === 1) roundP1 = p.grid[pos];
+  else roundP2 = p.grid[pos];
+  
+  p1.stuck = !hasMoves(p1);
+  p2.stuck = !hasMoves(p2);
+  
+  // Logic if Opponent is Stuck
+  if (opponent.stuck) {
+    if (currentPlayer === 1 && roundP2 === null) roundP2 = 0;
+    else if (currentPlayer === 2 && roundP1 === null) roundP1 = 0;
+    
+    resolveRound();
+    
+    if (p1.stuck && p2.stuck) { 
+      endGame(); 
+      return; 
+    }
+    
+    // Player moves again immediately
+    let name = currentPlayer === 1 ? "Player 1" : (mode === "ai" ? "AI" : "Player 2");
+    updateInfo(`${name} moves again (Opponent stuck)`);
+    render();
+    
+    if (mode === "ai" && currentPlayer === 2 && !p2.stuck) setTimeout(aiMove, 600);
+    
+  } else {
+    // Standard Turn Switch
+    let nextP = currentPlayer === 1 ? 2 : 1;
+    if (roundP1 !== null && roundP2 !== null) resolveRound();
+    
+    triggerSwitch(nextP, "play");
+  }
+}
+
+/* --- HELPERS --- */
 function randomFill(player) {
   const nums = [...Array(15).keys()].map(i => i + 1).sort(() => Math.random() - 0.5);
   let k = 0;
@@ -147,40 +230,6 @@ function hasMoves(p) {
 
 function isValidMove(p, pos) {
   return !p.visited.has(pos) && neighbors(p.pos).includes(pos);
-}
-
-function makeMove(pos) {
-  if (phase !== "play" || round >= MAX_ROUNDS) return;
-  const p = currentPlayer === 1 ? p1 : p2;
-  const opponent = currentPlayer === 1 ? p2 : p1;
-  if (!isValidMove(p, pos)) return;
-  p.visited.add(pos);
-  p.path.push(pos);
-  p.pos = pos;
-  if (currentPlayer === 1) roundP1 = p.grid[pos];
-  else roundP2 = p.grid[pos];
-  p1.stuck = !hasMoves(p1);
-  p2.stuck = !hasMoves(p2);
-  if (opponent.stuck) {
-    if (currentPlayer === 1 && roundP2 === null) roundP2 = 0;
-    else if (currentPlayer === 2 && roundP1 === null) roundP1 = 0;
-    resolveRound();
-    if (p1.stuck && p2.stuck) { endGame(); return; }
-    let name = currentPlayer === 1 ? "Player 1" : (mode === "ai" ? "AI" : "Player 2");
-    updateInfo(`${name} moves again (Opponent stuck)`);
-    render();
-    if (mode === "ai" && currentPlayer === 2 && !p2.stuck) setTimeout(aiMove, 600);
-  } else {
-    let nextP = currentPlayer === 1 ? 2 : 1;
-    if (roundP1 !== null && roundP2 !== null) resolveRound();
-    if (mode === "2p") triggerSwitch(nextP, "play");
-    else {
-      currentPlayer = nextP;
-      updateTurnInfo();
-      render();
-      if (currentPlayer === 2 && !p2.stuck) setTimeout(aiMove, 500);
-    }
-  }
 }
 
 function updateTurnInfo() {
@@ -327,7 +376,7 @@ function updateInfo(msg) {
 function endGame() {
   if (phase === "end") return;
   phase = "end";
-  document.getElementById("turnOverlay").style.display = "none";
+  document.getElementById("passBtn").style.display = "none";
   render(); 
   updateInfo("Game Over!");
   let msg = "";
@@ -338,11 +387,14 @@ function endGame() {
   document.getElementById("finalP1").innerText = p1.score;
   document.getElementById("finalP2").innerText = p2.score;
   document.getElementById("resultModal").style.display = "flex";
+  
+  // Unlock buttons
+  document.getElementById("btn-ai").disabled = false;
+  document.getElementById("btn-2p").disabled = false;
 }
 
 function resetGame() {
   location.reload();
 }
 
-// 4. Initial Render Call (Ensures grid visible on load)
 render();

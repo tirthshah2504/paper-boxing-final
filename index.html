@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Paper Boxing</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 
 <body>
@@ -12,62 +12,47 @@
   <button class="rules-btn" onclick="toggleRules()">?</button>
 
   <div id="rulesModal" class="rules-modal" style="display: none;">
-    
     <div class="rules-header">
       <h3>🥊 Game Rules</h3>
       <span class="close-rules" onclick="toggleRules()">&times;</span>
     </div>
-
     <div class="rules-body">
-      
       <div class="rule-item">
         <div class="rule-text">
           <strong>1. Setup</strong>
-          <p>The top-left corner is always empty. Fill the rest with numbers 1–15 by tapping on the grid to place numbers.</p>
+          <p>The top-left corner is always empty. Fill the rest with numbers 1–15.</p>
         </div>
         <img src="assets/rule-empty.jpeg" alt="Empty Corner" class="rule-img">
         <img src="assets/rule-filled.jpeg" alt="Filled Grid" class="rule-img">
       </div>
-
       <div class="rule-item">
         <div class="rule-text">
           <strong>2. Start</strong>
-          <p>Start by drawing a line from the empty corner to any neighbor (up, down, left, right, or diagonal).</p>
+          <p>Start by drawing a line from the empty corner to any neighbor.</p>
         </div>
         <img src="assets/rule-highlight.png" alt="Highlighted Neighbors" class="rule-img">
       </div>
-
       <div class="rule-item">
         <div class="rule-text">
-          <strong>3. How to make a Move</strong>
-          <p>Extend your line to a new number each turn. You cannot visit a number twice! If stuck, you score 0 for remaining rounds.</p>
+          <strong>3. Move & Stuck</strong>
+          <p>Extend your line to a new number each turn. Visit each number only once!</p>
         </div>
         <img src="assets/rule-lines.jpeg" alt="Path Lines" class="rule-img">
       </div>
-
       <div class="rule-item">
         <div class="rule-text">
           <strong>4. Scoring</strong>
-          <p>In each round, compare the numbers both players selected. The higher number gets 1 point.</p>
+          <p>Higher number wins the round (1 point).</p>
         </div>
         <img src="assets/rule-table.png" alt="Score Table" class="rule-img">
       </div>
-
       <div class="rule-item">
         <div class="rule-text">
           <strong>5. Goal</strong>
-          <p>Win the most rounds out of 15 to become the Paper Boxing Champion!</p>
+          <p>Win the most rounds out of 15!</p>
         </div>
         <img src="assets/rule-gameover.png" alt="Game Over" class="rule-img">
       </div>
-
-    </div>
-  </div>
-
-  <div id="turnOverlay" class="turn-overlay" style="display: none;">
-    <div class="overlay-content">
-      <h2 id="overlayText">Player 2's Turn</h2>
-      <button onclick="startNextTurn()">Start Turn</button>
     </div>
   </div>
 
@@ -94,8 +79,8 @@
   <img src="assets/logo.png" alt="Paper Boxing" class="game-logo" />
 
   <div class="menu-card">
-    <button onclick="startGame('ai')">Single Player vs AI</button>
-    <button onclick="startGame('2p')">Two Player</button>
+    <button id="btn-ai" onclick="startGame('ai')">Single Player vs AI</button>
+    <button id="btn-2p" onclick="startGame('2p')">Two Player</button>
   </div>
 
   <p id="info" class="info-text">Choose a mode to start</p>
@@ -110,6 +95,12 @@
       <svg id="svg2" class="path-svg" viewBox="0 0 304 304"></svg>
       <div class="grid-overlay" id="grid2"></div>
     </div>
+  </div>
+
+  <div class="pass-wrapper">
+    <button id="passBtn" onclick="finishSwitch()" style="display:none;">
+      Pass Turn
+    </button>
   </div>
 
   <div class="scores">

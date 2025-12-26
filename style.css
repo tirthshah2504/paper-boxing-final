@@ -124,29 +124,21 @@ body {
   line-height: 1.5;
 }
 
-/* --- IMAGE STYLING FIX --- */
+/* IMAGE STYLING */
 .rule-img {
-  /* Make them big and responsive */
   width: 100%; 
   max-width: 280px; 
-  
-  /* Force a perfect square shape */
   aspect-ratio: 1 / 1;
-  
-  /* Force image to fill the square completely (no gaps) */
   object-fit: cover;
-  
   border-radius: 12px;
-  border: 3px solid #C95A2E; /* Slightly thicker border */
+  border: 3px solid #C95A2E; 
   display: block;
-  margin-bottom: 15px; /* Space if there are multiple images */
+  margin-bottom: 15px;
 }
 
-/* Remove bottom margin from the last image in a group */
 .rule-img:last-child {
   margin-bottom: 0;
 }
-
 
 /* --- LOGO --- */
 .game-logo {
@@ -155,36 +147,6 @@ body {
   height: auto;
   margin: 10px auto;
   display: block;
-}
-
-/* --- TURN OVERLAY --- */
-.turn-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(254, 251, 227, 0.98);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.overlay-content h2 {
-  color: #1A8ACB;
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-.overlay-content button {
-  background: #FFEB8A;
-  border: 2px solid #C95A2E;
-  padding: 15px 30px;
-  font-size: 1.3rem;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
 }
 
 /* --- RESULT MODAL --- */
@@ -273,6 +235,12 @@ body {
   cursor: pointer;
 }
 
+.menu-card button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
 .info-text {
   color: #C95A2E;
   font-size: 1.1rem;
@@ -295,6 +263,37 @@ body {
   font-size: 1rem;
   cursor: pointer;
 }
+
+/* --- PASS BUTTON LOCATION --- */
+.pass-wrapper {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  min-height: 40px; /* Reserves a little space */
+  display: flex;
+  justify-content: center;
+}
+
+/* Pass Button Styling */
+#passBtn {
+  background: #FFEB8A;
+  color: #C95A2E;
+  border: 2px solid #C95A2E;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
 
 /* --- BOARDS CONTAINER --- */
 .boards {
