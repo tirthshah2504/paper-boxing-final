@@ -72,6 +72,18 @@
         </div>
       </div>
 
+      <table id="roundTable">
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>Player 1</th>
+            <th>Player 2</th>
+            <th>Winner</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
       <button onclick="resetGame()">Play Again</button>
     </div>
   </div>
@@ -109,18 +121,6 @@
   </div>
 
   <p class="round-text">Round: <span id="round">0</span>/15</p>
-
-  <table id="roundTable">
-    <thead>
-      <tr>
-        <th>Round</th>
-        <th>Player 1</th>
-        <th>Player 2</th>
-        <th>Winner</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
 
   <div class="controls">
     <button onclick="undoFill()">Undo (Fill)</button>

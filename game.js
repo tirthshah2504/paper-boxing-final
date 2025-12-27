@@ -297,8 +297,6 @@ function addRoundRow(r, v1, v2, w) {
   const tr = document.createElement("tr");
   tr.innerHTML = `<td>${r}</td><td>${v1}</td><td>${v2}</td><td>${w}</td>`;
   document.querySelector("#roundTable tbody").appendChild(tr);
-  const table = document.querySelector("table");
-  table.scrollIntoView({ behavior: "smooth", block: "end" });
 }
 
 function render() {

@@ -278,20 +278,24 @@ body {
 #passBtn {
   background: #FFEB8A;
   color: #C95A2E;
-  border: 2px solid #C95A2E;
-  padding: 12px 24px;
-  font-size: 1.2rem;
-  border-radius: 25px;
+  border: 3px solid #C95A2E;
+  padding: 15px 40px;
+  font-size: 1.4rem;
+  border-radius: 4px; /* Rectangular */
   cursor: pointer;
   font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  animation: pulse 1.5s infinite;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  
+  /* Boxy 3D effect */
+  box-shadow: 0 8px 0 #C95A2E, 0 15px 20px rgba(0,0,0,0.2);
+  transition: transform 0.1s, box-shadow 0.1s;
+  margin-bottom: 15px; /* Adjust for the shadow */
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+#passBtn:active {
+  transform: translateY(8px);
+  box-shadow: 0 0 0 #C95A2E, inset 0 2px 5px rgba(0,0,0,0.3);
 }
 
 
